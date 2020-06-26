@@ -1,28 +1,43 @@
-const express = require("express");
+// const express = require("express");
 const db = require("../data/config");
 
 function find() {
-	return db("schemes");
+	return db("users");
 }
 
-function findById(id) {
-	return db("schemes").where({ id }).first();
+function findById(ID) {
+	return db("schemes").where("schemes.id", ID).first();
 }
 
-function findSteps(id, scheme_name) {
-	return db("schemes").where({ id });
+function findSteps(ID) {
+	return db("steps")
+		.where("steps.scheme_id", ID)
+		.innerJoin("schemes", "schemes.id", "steps.scheme_id")
+		.select("steps.step_number", "steps.instructions", "schemes.scheme_name")
+		.orderBy("steps.step_number");
 }
 
 function add(scheme) {
-	db("schemes")
+	return db("schemes")
 		.insert(scheme)
-		.then((ids) => {
-			return findById(ids[0]);
+		.then((id) => {
+			return findById(id[0]);
 		});
 }
 
-function remove(id) {
-	db("schemes").where({ id }).del();
+function update(scheme, id) {
+	return db("schemes").where({ id }).update(scheme);
 }
 
-module.exports = { find, findById, findSteps, add, remove };
+function remove(id) {
+	return db("schemes").where({ id }).del();
+}
+
+module.exports = {
+	find,
+	findById,
+	findSteps,
+	remove,
+	add,
+	update,
+};
