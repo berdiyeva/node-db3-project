@@ -2,7 +2,7 @@
 const db = require("../data/config");
 
 function find() {
-	return db("users");
+	return db("schemes");
 }
 
 function findById(ID) {
@@ -25,12 +25,12 @@ function add(scheme) {
 		});
 }
 
-function update(scheme, id) {
-	return db("schemes").where({ id }).update(scheme);
+function update(scheme, ID) {
+	return db("schemes").where({ id: ID }).update(scheme);
 }
 
-function remove(id) {
-	return db("schemes").where({ id }).del();
+function remove(ID) {
+	return db("schemes").where({ id: ID }).del();
 }
 
 module.exports = {
